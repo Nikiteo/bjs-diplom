@@ -72,7 +72,7 @@ newFavoritesWidgets.addUserCallback = () => {
     ApiConnector.addUserToFavorites(addedUser, response => {
         if(response.success) {
             newFavoritesWidgets.setMessage(false, `Пользователь ${addedUser.name} с id = ${addedUser.id} добавлен в избранное`);
-            ProfileWidget.showProfile(response.data);
+            ProfileWidget.showProfile(addedUser.data);
         }
         else {
             newFavoritesWidgets.setMessage(true, response.data);
@@ -83,9 +83,11 @@ newFavoritesWidgets.addUserCallback = () => {
 newFavoritesWidgets.removeUserCallback = id => {
     ApiConnector.removeUserFromFavorites(id, response => {
         if(response.success) {
-            console.log(response);
             newFavoritesWidgets.setMessage(false, `Пользователь c ID = ${id} удален из избранного`);
-            ProfileWidget.showProfile(response.data);
+            ProfileWidget.showProfile(id.data);
+            newFavoritesWidgets.clearTable();
+            newFavoritesWidgets.fillTable(id.data);
+            newMoney.updateUsersList(id.data);
         }
         else {
             newFavoritesWidgets.setMessage(true, response.data);
