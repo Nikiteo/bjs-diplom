@@ -1,4 +1,12 @@
 "use strict";
+//Доп.функции
+const updateTable = (serverData) => {
+    newFavoritesWidgets.clearTable();
+    newFavoritesWidgets.fillTable(serverData);
+    newMoney.updateUsersList(serverData);
+}
+
+
 // Выход из личного кабинета
 const exit = new LogoutButton();
 exit.action = () => ApiConnector.logout(response => {
@@ -61,9 +69,7 @@ const newFavoritesWidgets = new FavoritesWidget();
 //Начальный список избранного 
 ApiConnector.getFavorites((response) => {
     if (response.success) {      
-        newFavoritesWidgets.clearTable();
-        newFavoritesWidgets.fillTable(response.data);
-        newMoney.updateUsersList(response.data);
+        updateTable(response.data);
     }
 });
 //Добавлениe пользователя в список избранных
@@ -72,9 +78,7 @@ newFavoritesWidgets.addUserCallback = () => {
     ApiConnector.addUserToFavorites(addedUser, response => {
         if(response.success) {
             newFavoritesWidgets.setMessage(false, `Пользователь ${addedUser.name} с id = ${addedUser.id} добавлен в избранное`);
-            newFavoritesWidgets.clearTable();
-            newFavoritesWidgets.fillTable(addedUser.data);
-            newMoney.updateUsersList(addedUser.data);
+            updateTable(response.data);
         }
         else {
             newFavoritesWidgets.setMessage(true, response.data);
@@ -86,9 +90,7 @@ newFavoritesWidgets.removeUserCallback = (id) => {
     ApiConnector.removeUserFromFavorites(id, response => {
         if(response.success) {
             newFavoritesWidgets.setMessage(false, `Пользователь c ID = ${id} удален из избранного`);
-            newFavoritesWidgets.clearTable();
-            newFavoritesWidgets.fillTable(response.data);
-            newMoney.updateUsersList(response.data);
+            updateTable(response.data);
         }
         else {
             newFavoritesWidgets.setMessage(true, response.data);
